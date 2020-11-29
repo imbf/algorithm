@@ -32,45 +32,29 @@ public class FunctionDevelopment {
     
     public int[] solution(int[] progresses, int[] speeds) {
         List<Integer> result = new ArrayList<>();
-        Stack<Info> stack = new Stack<>();
-        for (int i = progresses.length - 1; i >= 0; i--) {
-            stack.push(new Info(progresses[i], speeds[i]));
+        Queue<Task> queue = new ArrayDeque<>();
+        for (int i = 0; i < progresses.length; i++) {
+            queue.add(new Task(progresses[i], speeds[i]));
         }
         
-        for (int i = 1; !stack.isEmpty(); i++) {
+        for (int i = 1; !queue.isEmpty(); i++) {
             int cnt = 0;
-            while (!stack.isEmpty() && stack.peek().isDeploy(i)) {
-                stack.pop();
+            while (!queue.isEmpty() && queue.peek().isDeploy(i)) {
+                queue.poll();
                 cnt++;
             }
-            if (cnt != 0) // 이 분기문을 없애고 마지막에 filter로 0인 원소를 필터링 해도 좋다.
-                result.add(cnt);
+            result.add(cnt);
         }
         
-        return result.stream().mapToInt(Integer::intValue).toArray();
+        return result.stream().filter(i -> i != 0).mapToInt(Integer::intValue).toArray();
     }
-    
-    // 가장 인기있는 풀
-    /*
-    public int[] solution(int[] progresses, int[] speeds) {
-        int[] dayOfend = new int[100];
-        int day = -1;
-        for(int i=0; i<progresses.length; i++) {
-            while(progresses[i] + (day*speeds[i]) < 100) {
-                day++;
-            }
-            dayOfend[day]++;
-        }
-        return Arrays.stream(dayOfend).filter(i -> i!=0).toArray();
-    }
-     */
 }
 
-class Info {
+class Task {
     private int progress;
     private int speed;
     
-    public Info(int progress, int speed) {
+    public Task(int progress, int speed) {
         this.progress = progress;
         this.speed = speed;
     }
