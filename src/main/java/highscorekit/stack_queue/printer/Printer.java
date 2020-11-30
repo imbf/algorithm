@@ -2,8 +2,7 @@ package highscorekit.stack_queue.printer;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,25 +19,25 @@ public class Printer {
     
     
     public int solution(int[] priorities, int location) {
-        int order = 0;
-        Queue<Document> queue = new LinkedList<>();
+        int answer = 0;
+        Queue<Document> queue = new ArrayDeque<>();
         for (int i = 0; i < priorities.length; i++) {
-            queue.offer(new Document(priorities[i], i));
+            queue.add(new Document(priorities[i], i));
         }
+        
         while (true) {
-            Document poll = queue.poll();
             int maxInt = queue.stream().mapToInt(Document::getPriority).max().orElseGet(() -> 0);
-            if (poll.getPriority() >= maxInt) {
-                order++;
+            Document poll = queue.poll();
+            if (poll.getPriority() == maxInt) {
+                answer++;
                 if (poll.isSameLocation(location)) {
                     break;
                 }
             } else {
-                queue.offer(poll);
+                queue.add(poll);
             }
-            
         }
-        return order;
+        return answer;
     }
 }
 
@@ -59,6 +58,31 @@ class Document {
         return priority;
     }
 }
+
+/*
+    public int solution(int[] priorities, int location) {
+        int answer = 0;
+        Queue<Document> queue = new LinkedList<>();
+        for (int i = 0; i < priorities.length; i++) {
+            queue.offer(new Document(priorities[i], i));
+        }
+        while (true) {
+            Document poll = queue.poll();
+            int maxInt = queue.stream().mapToInt(Document::getPriority).max().orElseGet(() -> 0);
+            if (poll.getPriority() >= maxInt) {
+                answer++;
+                if (poll.isSameLocation(location)) {
+                    break;
+                }
+            } else {
+                queue.offer(poll);
+            }
+            
+        }
+        return answer;
+    }
+    */
+
 
 /*
 class Solution {
